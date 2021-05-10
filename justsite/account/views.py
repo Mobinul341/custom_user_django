@@ -42,7 +42,7 @@ def signin(request):
         if form.is_valid():
             email = request.POST['email']
             password = request.POST['password']
-            
+            #This line showing error "TypeError, __init__() got an unexpected keyword argument 'email'
             user = CustomAuthentication(email=email, password=password)
 
             if user:
