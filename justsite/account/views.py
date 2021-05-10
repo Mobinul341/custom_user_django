@@ -43,7 +43,7 @@ def signin(request):
             email = request.POST['email']
             password = request.POST['password']
             
-            user = CustomAuthentication(email=email, password=password)
+            user = CustomAuthentication(email,password)
 
             if user:
                 login(request, user)

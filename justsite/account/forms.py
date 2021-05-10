@@ -13,7 +13,8 @@ class CustomUserForm(UserCreationForm):
 
 
 class CustomAuthentication(forms.ModelForm):
-    password = forms.CharField(label='Password', widget=forms.PasswordInput)
+    #email = forms.EmailField(max_length=100, help_text="Required valid mail", widget=forms.TextInput)
+    #password = forms.CharField(label='Password', widget=forms.PasswordInput)
 
     class Meta:
         model = CustomUser
@@ -27,4 +28,29 @@ class CustomAuthentication(forms.ModelForm):
             raise forms.ValidationError("Invalid Email or Password")
 
 
+
+class CustomUpdateForm(forms.ModelForm):
+
+    class Meta:
+        model = CustomUser
+        fields = ['email','username']
+
+    def clean_email(self):
+        if self.is_valid():
+            email = self.cleaned_data['email']
+            try:
+                account = CustomUser.objects.exclude(pk=self.instance.pk).get(email=email)
+            except CustomUser.DoesNotExist:
+                return email
+            raise forms.ValidationError('Email %s is already exists'%email)
+    def clean_username(self):
+        if self.is_valid():
+            username = self.cleaned_data['username']
+            try:
+                account = CustomUser.objects.exclude(pk=self.instance.pk).get(username=username)
+            except CustomUser.DoesNotExist:
+                return username
+            raise forms.ValidationError('Username %s is already exists'%username)
         
+
+            
